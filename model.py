@@ -13,7 +13,7 @@ class Autoencoder:
             bottleneck_dim: dimension of bottleneck layer (default 40)
         """
         self.image_dims = image_dims
-        self.bottleneck_dim = 40
+        self.bottleneck_dim = bottleneck_dim
     
     def build_model(self):
         """ Builds model graph
@@ -27,7 +27,9 @@ class Autoencoder:
     def train(self):
         """ Builds training graph
         """
-        pass
+        err = tf.reduce_mean(tf.abs(self.decoder - self.images))
+        train_step = tf.train.AdamOptimizer().minimize(err, name="train_step")
+        return train_step
 
     
     def encoder(self, images):
@@ -35,12 +37,12 @@ class Autoencoder:
         """
         # flatten image
         k = np.prod(self.image_dims) 
-        x = tf.reshape(raw_data, [tf.shape(images)[0], k], name="x")
+        x = tf.reshape(images, [tf.shape(images)[0], k], name="x")
 
         # pass through linear layer
-        W = tf.Variable(tf.truncated_normal([k, self.z_dim], stddev=0.1))
-        b = tf.Variable(tf.truncated_normal([self.z_dim], stddev=0.1))
-        h = tf.nn.xw_plus_b(x, W1, b1, name="bottleneck")
+        W = tf.Variable(tf.truncated_normal([k, self.bottleneck_dim], stddev=0.1))
+        b = tf.Variable(tf.truncated_normal([self.bottleneck_dim], stddev=0.1))
+        h = tf.nn.xw_plus_b(x, W, b, name="bottleneck")
         return h
 
 
