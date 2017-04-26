@@ -4,6 +4,7 @@ checkpoint
 *.jpg
 *.tgz
 *.npy
+*.npz
 saved_models/
 __pycache__
 out
