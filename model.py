@@ -23,6 +23,8 @@ class Autoencoder:
         self.encoder = self.encoder(self.images)
         self.decoder = self.decoder(self.encoder)
 
+        self.saver = tf.train.Saver()
+
  
     def train(self):
         """ Builds training graph
