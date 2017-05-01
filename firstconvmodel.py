@@ -1,20 +1,19 @@
 import tensorflow as tf
 import numpy as np
 
-class Autoencoder:
+class ConvEncoder:
     """ Autoencoder class
     """
     
-    def __init__(self, image_dims=[64, 64, 3], bottleneck_dim=40):
+    def __init__(self, image_dims=[64, 64, 3]):
         """ Sets hyper-parameters
 
         Input:
             image_dims: image dimensions (default [64, 64, 3])
             bottleneck_dim: dimension of bottleneck layer (default 40)
         """
-        self.name = "Base_model"
+        self.name = "Conv_model"
         self.image_dims = image_dims
-        self.bottleneck_dim = bottleneck_dim
     
     def build_model(self):
         """ Builds model graph
@@ -38,28 +37,32 @@ class Autoencoder:
     def encoder(self, images):
         """ Builds encoder graph
         """
-        # flatten image
-        k = np.prod(self.image_dims) 
-        x = tf.reshape(images, [tf.shape(images)[0], k], name="x")
+        
+        # First convolutional layer
+        W1 = tf.Variable(tf.truncated_normal([3, 3, 3, 4]))
+        x1 = tf.nn.conv2d(images, W1, [1, 3, 3, 1])
+        h1 = tf.nn.relu(x1)
 
-        # pass through linear layer
-        W = tf.Variable(tf.truncated_normal([k, self.bottleneck_dim], stddev=0.1))
-        b = tf.Variable(tf.truncated_normal([self.bottleneck_dim], stddev=0.1))
-        h = tf.nn.xw_plus_b(x, W, b, name="bottleneck")
-        return h
+        # Second conv layer
+        W2 = tf.Variable(tf.truncated_normal([3, 3, 4, 8]))
+        x2 = tf.nn.conv2d(h1, W2, [1, 3, 3, 1])
+        h2 = tf.nn.relu(x2, name="bottleneck")
+
+        return h2
 
 
     def decoder(self, bottleneck):
         """ Builds decoder graph
         """
-        # pass through linear layer
-        k = np.prod(self.image_dims) 
-        W = tf.Variable(tf.truncated_normal([self.bottleneck_dim, k], stddev=0.1))
-        b = tf.Variable(tf.truncated_normal([k], stddev=0.1))
-        y = tf.nn.xw_plus_b(bottleneck, W, b, name="y")
-        
-        # reshape to image
-        return tf.reshape(y, [tf.shape(bottleneck)[0]] + self.image_dims, name="raw_out")
+        # First deconv
+        W2 = tf.Variable(tf.truncated_normal([3, 3, 8, 4]))
+        x2 = tf.nn.conv2d_transpose(bottleneck, W2,)
+
+        # Second deconv
+        # TODO
+
+
+        return 
 
     def save(self, sess, iters):
         """ Saves tensorflow graph

@@ -13,9 +13,6 @@ ae = Autoencoder()
 ae.build_model()
 ae.train()
 
-# Saver operation to store variables
-#saver = tf.train.Saver()
-
 # Do the training
 init = tf.global_variables_initializer()
 sess = tf.Session()
@@ -37,22 +34,6 @@ for i in range(iters):
     print(i)
 
 # Save trained model
-#save_path = saver.save(sess, "./saved_models/model{0}.ckpt".format(iters))
-#print("Saved model in {0}".format(save_path))
+save_path = ae.save(sess, iters)
+print("Saved model in {0}".format(save_path))
 
-# Test the model
-image = np_data["targets"][:8]
-out = sess.run("raw_out:0", feed_dict={"raw_data:0": image})
-
-# Plot some samples
-
-plt.figure()
-
-for i in range(out.shape[0]):
-    pueh = (out[i] - np.min(out[i])) / (np.max(out[i]) - np.min(out[i]))
-    plt.subplot(2, out.shape[0], i + 1)
-    plt.imshow(pueh)
-    plt.subplot(2, out.shape[0], i + out.shape[0] + 1)
-    plt.imshow(np_data["targets"][i]/255)
-
-plt.show()
