@@ -8,3 +8,4 @@ checkpoint
 saved_models/
 __pycache__
 out
+lfw-*
