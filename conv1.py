@@ -19,6 +19,7 @@ class ConvEncoder:
         """ Builds model graph
         """
         self.images = tf.placeholder(tf.float32, [None] + self.image_dims, name="raw_data")
+        self.shapes = []
 
         self.encoder = self.encoder(self.images)
         self.decoder = self.decoder(self.encoder)
@@ -40,13 +41,16 @@ class ConvEncoder:
         
         # First convolutional layer
         W1 = tf.Variable(tf.truncated_normal([3, 3, 3, 4]))
-        x1 = tf.nn.conv2d(images, W1, [1, 3, 3, 1])
+        x1 = tf.nn.conv2d(images, W1, [1, 3, 3, 1], padding="SAME")
         h1 = tf.nn.relu(x1)
 
         # Second conv layer
         W2 = tf.Variable(tf.truncated_normal([3, 3, 4, 8]))
-        x2 = tf.nn.conv2d(h1, W2, [1, 3, 3, 1])
+        x2 = tf.nn.conv2d(h1, W2, [1, 3, 3, 1], padding="SAME")
         h2 = tf.nn.relu(x2, name="bottleneck")
+
+        # Save shapes
+        self.shapes += [tf.shape(images), tf.shape(x1)]
 
         return h2
 
@@ -55,14 +59,16 @@ class ConvEncoder:
         """ Builds decoder graph
         """
         # First deconv
-        W2 = tf.Variable(tf.truncated_normal([3, 3, 8, 4]))
-        x2 = tf.nn.conv2d_transpose(bottleneck, W2,)
+        W2 = tf.Variable(tf.truncated_normal([3, 3, 4, 8]))
+        x2 = tf.nn.conv2d_transpose(bottleneck, W2, self.shapes[1], [1, 3, 3, 1])
+        h2 = tf.nn.relu(x2)
 
         # Second deconv
-        # TODO
+        W1 = tf.Variable(tf.truncated_normal([3, 3, 3, 4]))
+        x1 = tf.nn.conv2d_transpose(h2, W1, self.shapes[0], [1, 3, 3, 1])
+        h1 = tf.nn.relu(x1, name="raw_out")
 
-
-        return 
+        return h1
 
     def save(self, sess, iters):
         """ Saves tensorflow graph

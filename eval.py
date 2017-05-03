@@ -3,17 +3,21 @@ import numpy as np
 import scipy.ndimage as image
 import matplotlib.pyplot as plt
 from model import Autoencoder
+from conv1 import ConvEncoder
+import sys
 
 np_data = np.load("eval_data/small_data_black_squares.npz")
 
 print(np_data)
 
 # create autoencoder
-ae = Autoencoder()
+ae = ConvEncoder()
 ae.build_model()
 ae.train()
 
 iters = 700
+if len(sys.argv) > 0:
+    iters = sys.argv[1]
 
 # Restore
 sess = tf.Session()
