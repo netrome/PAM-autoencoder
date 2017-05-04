@@ -12,7 +12,7 @@ np_data = np.load("eval_data/small_data_black_squares.npz")
 print(np_data)
 
 # create autoencoder
-ae = ConvEncoder2()
+ae = ConvEncoder1()
 ae.build_model()
 ae.train()
 

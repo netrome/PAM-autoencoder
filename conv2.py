@@ -58,9 +58,9 @@ class ConvEncoder2:
         """ Builds decoder graph
         """
         # First deconv
-        #W2 = tf.Variable(tf.truncated_normal([3, 3, 3, 3]))
-        W2 = self.weights[0]
-        x2 = tf.nn.conv2d_transpose(bottleneck, W2, self.shapes[1], [1, 1, 1, 1])
+        W2 = tf.Variable(tf.truncated_normal([3, 3, 3, 3]))
+        #W2 = self.weights[0]
+        x2 = tf.nn.conv2d_transpose(bottleneck, W2, self.shapes[1], [1, 1, 1, 1], padding="SAME")
         h2 = tf.add(x2, 0, name="raw_out") # tf.nn.relu(x2)
 
         return h2
