@@ -4,6 +4,7 @@ import scipy.ndimage as image
 import matplotlib.pyplot as plt
 from model import Autoencoder
 from conv1 import ConvEncoder
+from conv2 import ConvEncoder2
 import sys
 
 np_data = np.load("eval_data/small_data_black_squares.npz")
@@ -11,7 +12,7 @@ np_data = np.load("eval_data/small_data_black_squares.npz")
 print(np_data)
 
 # create autoencoder
-ae = ConvEncoder()
+ae = ConvEncoder2()
 ae.build_model()
 ae.train()
 
@@ -35,7 +36,7 @@ out = sess.run("raw_out:0", feed_dict={"raw_data:0": image})
 plt.figure()
 
 for i in range(out.shape[0]):
-    pueh = (out[i] - np.min(out[i])) / (np.max(out[i]) - np.min(out[i]))
+    pueh = (out[i] - np.min(out[i])) / (np.max(out[i]) - np.min(out[i]) + 1E-6)
     plt.subplot(2, out.shape[0], i + 1)
     plt.imshow(pueh)
     plt.subplot(2, out.shape[0], i + out.shape[0] + 1)

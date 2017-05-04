@@ -9,6 +9,9 @@ import sys
 
 np_data = np.load("eval_data/small_data_black_squares.npz")
 
+for key in np_data:
+    np_data[key] = np_data[key][:200]
+
 print(np_data)
 
 # create autoencoder
@@ -25,7 +28,7 @@ print()
 print()
 print("------------------------------")
 
-batch_size = 200
+batch_size = 50
 iters = 700
 if len(sys.argv) > 1:
     iters = int(sys.argv[1])
@@ -41,6 +44,6 @@ for i in range(iters):
         print(i)
 
 # Save trained model
-save_path = ae.save(sess, iters)
+save_path = ae.save(sess, "small_{0}".format(iters))
 print("Saved model in {0}".format(save_path))
 
