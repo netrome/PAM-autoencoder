@@ -5,20 +5,21 @@ import matplotlib.pyplot as plt
 from model import Autoencoder
 from conv1 import ConvEncoder
 from conv2 import ConvEncoder2
+from conv3 import ConvEncoder3
 import sys
 
-np_data = np.load("eval_data/small_data_black_squares.npz")
+np_data = np.load(sys.argv[1])
 
 print(np_data)
 
 # create autoencoder
-ae = ConvEncoder1()
+ae = ConvEncoder3()
 ae.build_model()
 ae.train()
 
 iters = 700
-if len(sys.argv) > 0:
-    iters = sys.argv[1]
+if len(sys.argv) > 1:
+    iters = sys.argv[2]
 
 # Restore
 sess = tf.Session()
