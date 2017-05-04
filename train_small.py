@@ -8,9 +8,7 @@ from conv2 import ConvEncoder2
 import sys
 
 np_data = np.load("eval_data/small_data_black_squares.npz")
-
-for key in np_data:
-    np_data[key] = np_data[key][:200]
+targets = np_data["targets"][:200]
 
 print(np_data)
 
@@ -34,8 +32,8 @@ if len(sys.argv) > 1:
     iters = int(sys.argv[1])
 
 for i in range(iters):
-    idx = np.random.randint(0, np_data["targets"].shape[0], batch_size)
-    data_batch = np_data["targets"][idx]
+    idx = np.random.randint(0, targets.shape[0], batch_size)
+    data_batch = targets[idx]
 
     for j in range(1):
         sess.run("train_step", feed_dict={"raw_data:0": data_batch})
