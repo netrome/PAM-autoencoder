@@ -11,13 +11,17 @@ np_data = np.load(sys.argv[1])
 print(np_data)
 
 # create autoencoder
-ae = ConvEncoder3()
+ae = Autoencoder()
 ae.build_model()
 ae.train()
 
 # Do the training
 init = tf.global_variables_initializer()
 sess = tf.Session()
+
+# File writer for tensorboard
+merged = tf.summary.merge_all()
+train_writer = tf.summary.FileWriter("/tmp/train/", sess.graph)
 
 sess.run(init)
 print()
@@ -37,6 +41,8 @@ for i in range(iters):
         sess.run("train_step", feed_dict={"raw_data:0": data_batch})
 
     if i%10 == 0:
+        #sess.run(merged, feed_dict={"raw_data:0": data_batch})
+        #train_writer.add_summary(merged)
         print(i)
 
 # Save trained model

@@ -42,5 +42,6 @@ for i in range(out.shape[0]):
     plt.imshow(pueh)
     plt.subplot(2, out.shape[0], i + out.shape[0] + 1)
     plt.imshow(np_data["targets"][i]/255)
+    print("Scaled with value: ", np.max(out[i]) - np.min(out[i]) + 1E-6)
 
 plt.show()
