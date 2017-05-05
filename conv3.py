@@ -31,7 +31,8 @@ class ConvEncoder3:
     def train(self):
         """ Builds training graph
         """
-        err = tf.reduce_mean(tf.abs(self.decoder - self.images))
+        ref = tf.placeholder(tf.float32, [None] + self.image_dims, name="targets") / 255
+        err = tf.reduce_mean(tf.abs(self.decoder - ref))
         train_step = tf.train.AdamOptimizer(0.001).minimize(err, name="train_step")
 
         # Add summary scalar for tensor board

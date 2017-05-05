@@ -11,7 +11,9 @@ np_data = np.load(sys.argv[1])
 
 # Split train and validation
 n = int(np.floor(np_data["targets"].shape[0] * 9/10))
+tr_patterns = np_data["patterns"][:n]
 tr_targets = np_data["targets"][:n]
+val_patterns = np_data["patterns"][n:]
 val_targets = np_data["targets"][n:]
 
 print(np_data)
@@ -49,15 +51,18 @@ if len(sys.argv) > 3:
     batch_size = int(sys.argv[3])
 
 for i in range(iters): 
-    data_shuffled = np.random.permutation(tr_targets)
+    idx = np.random.permutation(n)
+    patterns = tr_patterns[idx]
+    targets = tr_targets[idx]
 
     for j in range(int(np.floor(n/batch_size))):
-        data_batch = data_shuffled[j * batch_size : (j + 1) * batch_size] 
-        sess.run("train_step", feed_dict={"raw_data:0": data_batch})
+        data_batch = patterns[j * batch_size : (j + 1) * batch_size] 
+        ref_batch = targets[j * batch_size: (j + 1) * batch_size]
+        sess.run("train_step", feed_dict={"raw_data:0": data_batch, "targets:0": ref_batch})
 
-    m = sess.run(merged, feed_dict={"raw_data:0": data_batch})
+    m = sess.run(merged, feed_dict={"raw_data:0": tr_patterns, "targets:0": tr_targets})
     train_writer.add_summary(m, i)
-    m = sess.run(merged, feed_dict={"raw_data:0": val_targets})
+    m = sess.run(merged, feed_dict={"raw_data:0": val_patterns, "targets:0": val_targets})
     val_writer.add_summary(m, i)
     print(i)
 
