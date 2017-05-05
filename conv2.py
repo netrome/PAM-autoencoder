@@ -35,6 +35,9 @@ class ConvEncoder2:
         """
         err = tf.reduce_mean(tf.abs(self.decoder - self.images))
         train_step = tf.train.AdamOptimizer().minimize(err, name="train_step")
+
+        # Add summary scalar for tensor board
+        tf.summary.scalar("reduced_abs_err", err)
         return train_step
 
     

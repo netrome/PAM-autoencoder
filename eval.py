@@ -29,8 +29,9 @@ print()
 print("------------------------------")
 
 # Test the model
-image = np_data["targets"][:8]
-out = sess.run("raw_out:0", feed_dict={"raw_data:0": image})
+idx = [0, 1, 2, 3, 4, -1, -2, -3, -4]
+images = np_data["targets"][idx]
+out = sess.run("raw_out:0", feed_dict={"raw_data:0": images})
 
 # Plot some samples
 
@@ -41,7 +42,7 @@ for i in range(out.shape[0]):
     plt.subplot(2, out.shape[0], i + 1)
     plt.imshow(pueh)
     plt.subplot(2, out.shape[0], i + out.shape[0] + 1)
-    plt.imshow(np_data["targets"][i]/255)
+    plt.imshow(np_data["targets"][idx[i]]/255)
     print("Scaled with value: ", np.max(out[i]) - np.min(out[i]) + 1E-6)
 
 plt.show()
