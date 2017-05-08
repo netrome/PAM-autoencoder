@@ -1,18 +1,18 @@
 import tensorflow as tf
 import numpy as np
 
-class ConvEncoder3:
+class ConvSkip:
     """ Autoencoder class
     """
     
-    def __init__(self, image_dims=[64, 64, 3]):
+    def __init__(self, image_dims=[None, None, 3]):
         """ Sets hyper-parameters
 
         Input:
-            image_dims: image dimensions (default [64, 64, 3])
+            image_dims: image dimensions (default [None, None, 3])
             bottleneck_dim: dimension of bottleneck layer (default 40)
         """
-        self.name = "Conv_model_three"
+        self.name = "SkipConv"
         self.image_dims = image_dims
     
     def build_model(self):
@@ -21,6 +21,7 @@ class ConvEncoder3:
         self.images = tf.placeholder(tf.float32, [None] + self.image_dims, name="raw_data")
         self.images = self.images / 255
         self.shapes = []
+        self.activations = [self.images]
 
         self.encoder = self.encoder(self.images)
         self.decoder = self.decoder(self.encoder)
@@ -65,7 +66,8 @@ class ConvEncoder3:
         h4 = tf.nn.relu(x4, name="bottleneck") 
         
         # Save shapes
-        self.shapes += [tf.shape(images), tf.shape(x1), tf.shape(x2), tf.shape(x3)]
+        self.shapes = [tf.shape(images), tf.shape(x1), tf.shape(x2), tf.shape(x3)]
+        self.activations += [x1, x2, x3]
 
         return h4
 
@@ -84,15 +86,15 @@ class ConvEncoder3:
         x3 = tf.nn.conv2d_transpose(h4, W3, self.shapes[-2], [1, 1, 1, 1])
         h3 = tf.nn.relu(x3)
 
-        # First deconv
+        # Third deconv
         W2 = tf.Variable(tf.truncated_normal([5, 5, 24, 48], stddev=0.01))
         x2 = tf.nn.conv2d_transpose(h3, W2, self.shapes[1], [1, 2, 2, 1])
-        h2 = tf.nn.relu(x2)
+        h2 = tf.nn.relu(x2 + self.activations[1])
 
-        # Second deconv
+        # Forth deconv
         W1 = tf.Variable(tf.truncated_normal([7, 7, 3, 24], stddev=0.01))
         x1 = tf.nn.conv2d_transpose(h2, W1, self.shapes[0], [1, 3, 3, 1])
-        h1 = tf.nn.sigmoid(x1, name="raw_out")
+        h1 = tf.sigmoid(x1, name="raw_out")
        
 
         return h1 

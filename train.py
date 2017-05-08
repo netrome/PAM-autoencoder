@@ -4,6 +4,8 @@ from model import Autoencoder
 from conv1 import ConvEncoder
 from conv2 import ConvEncoder2
 from conv3 import ConvEncoder3
+from vae import VAE
+from convskip import ConvSkip
 import sys
 import os
 
@@ -19,7 +21,7 @@ val_targets = np_data["targets"][n:]
 print(np_data)
 
 # create autoencoder
-ae = ConvEncoder3()
+ae = ConvSkip()
 ae.build_model()
 ae.train()
 
@@ -60,10 +62,12 @@ for i in range(iters):
         ref_batch = targets[j * batch_size: (j + 1) * batch_size]
         sess.run("train_step", feed_dict={"raw_data:0": data_batch, "targets:0": ref_batch})
 
-    m = sess.run(merged, feed_dict={"raw_data:0": tr_patterns, "targets:0": tr_targets})
-    train_writer.add_summary(m, i)
-    m = sess.run(merged, feed_dict={"raw_data:0": val_patterns, "targets:0": val_targets})
-    val_writer.add_summary(m, i)
+    if i%10 == 0 and "board" in sys.argv:
+        m = sess.run(merged, feed_dict={"raw_data:0": tr_patterns, "targets:0": tr_targets})
+        train_writer.add_summary(m, i)
+        m = sess.run(merged, feed_dict={"raw_data:0": val_patterns, "targets:0": val_targets})
+        val_writer.add_summary(m, i)
+        ae.saver.save(sess, "/tmp/tf/model.cpkt", global_step=i)
     print(i)
 
 # Save trained model

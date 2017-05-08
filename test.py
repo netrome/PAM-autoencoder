@@ -6,6 +6,8 @@ from model import Autoencoder
 from conv1 import ConvEncoder
 from conv2 import ConvEncoder2
 from conv3 import ConvEncoder3
+from vae import VAE
+from convskip import ConvSkip
 import sys
 
 path = sys.argv[1]
@@ -13,7 +15,7 @@ img = image.imread(path, mode="RGB").astype(np.float)
 img = img.reshape([1] + list(img.shape))
 
 # create autoencoder
-ae = ConvEncoder3()
+ae = ConvSkip()
 ae.build_model()
 ae.train()
 
