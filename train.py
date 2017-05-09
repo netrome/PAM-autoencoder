@@ -6,6 +6,7 @@ from conv2 import ConvEncoder2
 from conv3 import ConvEncoder3
 from vae import VAE
 from convskip import ConvSkip
+from fullskip import FullSkip
 import sys
 import os
 
@@ -21,7 +22,7 @@ val_targets = np_data["targets"][n:]
 print(np_data)
 
 # create autoencoder
-ae = ConvSkip()
+ae = FullSkip()
 ae.build_model()
 ae.train()
 

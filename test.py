@@ -8,6 +8,7 @@ from conv2 import ConvEncoder2
 from conv3 import ConvEncoder3
 from vae import VAE
 from convskip import ConvSkip
+from fullskip import FullSkip
 import sys
 
 path = sys.argv[1]

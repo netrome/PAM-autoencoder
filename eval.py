@@ -8,6 +8,7 @@ from conv2 import ConvEncoder2
 from conv3 import ConvEncoder3
 from vae import VAE
 from convskip import ConvSkip
+from fullskip import FullSkip
 import sys
 
 np_data = np.load(sys.argv[1])
@@ -15,7 +16,7 @@ np_data = np.load(sys.argv[1])
 print(np_data)
 
 # create autoencoder
-ae = ConvSkip()
+ae = FullSkip()
 ae.build_model()
 ae.train()
 

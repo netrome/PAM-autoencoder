@@ -25,7 +25,7 @@ for path, dirs, files in os.walk(lfw_path):
             image_path = path + "/" + i
 
             # Save cropped original image
-            os.system("convert -resize 250x250 {0} /tmp/img.jpg".format(image_path))
+            os.system("convert -resize 120x120 {0} /tmp/img.jpg".format(image_path))
 
             if NORMAL:
                 os.system("convert /tmp/img.jpg {0}target{1}.jpg".format(target_path, k))
@@ -34,7 +34,7 @@ for path, dirs, files in os.walk(lfw_path):
 
             if CENTER_BLACK:
                 os.system("convert /tmp/img.jpg {0}target{1}.jpg".format(target_path, k))
-                os.system("convert -stroke black -draw \"rectangle 96, 96, 160, 160\" /tmp/img.jpg {0}pattern{1}.jpg".format(pattern_path, k))
+                os.system("convert -stroke black -draw \"rectangle 40, 40, 80, 80\" /tmp/img.jpg {0}pattern{1}.jpg".format(pattern_path, k))
                 k += 1
     elif k == n:
         break
