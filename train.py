@@ -44,6 +44,9 @@ print()
 print()
 print("------------------------------")
 
+train_err = []
+val_err = []
+
 batch_size = np.min([200, n])
 iters = 20
 if len(sys.argv) > 2:
@@ -62,12 +65,18 @@ for i in range(iters):
         ref_batch = targets[j * batch_size: (j + 1) * batch_size]
         sess.run("train_step", feed_dict={"raw_data:0": data_batch, "targets:0": ref_batch})
 
-    if i%10 == 0 and "board" in sys.argv:
-        m = sess.run(merged, feed_dict={"raw_data:0": tr_patterns, "targets:0": tr_targets})
+    if i%10 == 0 and "log" in sys.argv:
+        m, tr_err = sess.run([merged, "err:0"], feed_dict={"raw_data:0": tr_patterns, "targets:0": tr_targets})
         train_writer.add_summary(m, i)
-        m = sess.run(merged, feed_dict={"raw_data:0": val_patterns, "targets:0": val_targets})
+        m, va_err = sess.run([merged, "err:0"], feed_dict={"raw_data:0": val_patterns, "targets:0": val_targets})
         val_writer.add_summary(m, i)
         ae.saver.save(sess, "/tmp/tf/model.cpkt", global_step=i)
+
+        # Save in numpy format
+        train_err.append(tr_err)
+        val_err.append(va_err)
+        np.save("logs/train_err", train_err)
+        np.save("logs/val_err", val_err)
     print(i)
 
 # Save trained model

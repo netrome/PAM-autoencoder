@@ -33,7 +33,7 @@ class ConvSkip:
         """ Builds training graph
         """
         ref = tf.placeholder(tf.float32, [None] + self.image_dims, name="targets") / 255
-        err = tf.reduce_mean(tf.abs(self.decoder - ref))
+        err = tf.reduce_mean(tf.abs(self.decoder - ref), name="err")
         train_step = tf.train.AdamOptimizer(0.001).minimize(err, name="train_step")
 
         # Add summary scalar for tensor board
