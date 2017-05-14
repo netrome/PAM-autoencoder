@@ -63,9 +63,10 @@ class Autoencoder:
         W = tf.Variable(tf.truncated_normal([self.bottleneck_dim, k], stddev=0.1))
         b = tf.Variable(tf.truncated_normal([k], stddev=0.1))
         y = tf.nn.xw_plus_b(bottleneck, W, b, name="y")
+        z = tf.nn.sigmoid(y)
         
         # reshape to image
-        return tf.reshape(y, [tf.shape(bottleneck)[0]] + self.image_dims, name="raw_out")
+        return tf.reshape(z, [tf.shape(bottleneck)[0]] + self.image_dims, name="raw_out")
 
     def save(self, sess, iters):
         """ Saves tensorflow graph
