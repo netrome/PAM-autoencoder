@@ -5,7 +5,7 @@ class ConvEncoder3:
     """ Autoencoder class
     """
     
-    def __init__(self, image_dims=[64, 64, 3]):
+    def __init__(self, image_dims=[120, 120, 3]):
         """ Sets hyper-parameters
 
         Input:
@@ -32,8 +32,8 @@ class ConvEncoder3:
         """ Builds training graph
         """
         ref = tf.placeholder(tf.float32, [None] + self.image_dims, name="targets") / 255
-        err = tf.reduce_mean(tf.abs(self.decoder - ref))
-        train_step = tf.train.AdamOptimizer(0.001).minimize(err, name="train_step")
+        err = tf.reduce_mean(tf.abs(self.decoder - ref), name="err")
+        train_step = tf.train.AdamOptimizer().minimize(err, name="train_step")
 
         # Add summary scalar for tensor board
         tf.summary.scalar("reduced_abs_err", err)
