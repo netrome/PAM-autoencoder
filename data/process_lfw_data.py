@@ -21,7 +21,7 @@ os.system("rm targets/*")
 os.system("rm patterns/*")
 
 k = 0
-n = 1000
+n = 100000000
 for path, dirs, files in os.walk(lfw_path):
     if len(files) > 0 and k < n:
         for i in files:
