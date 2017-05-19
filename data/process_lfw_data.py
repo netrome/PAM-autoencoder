@@ -21,7 +21,7 @@ os.system("rm targets/*")
 os.system("rm patterns/*")
 
 k = 0
-n = 100000000
+n = 1200
 for path, dirs, files in os.walk(lfw_path):
     if len(files) > 0 and k < n:
         for i in files:
@@ -37,7 +37,7 @@ for path, dirs, files in os.walk(lfw_path):
 
             if CENTER_BLACK:
                 os.system("convert /tmp/img.jpg {0}target{1}.jpg".format(target_path, k))
-                os.system("convert -stroke black -draw \"rectangle 24, 24, 40, 40\" /tmp/img.jpg {0}pattern{1}.jpg".format(pattern_path, k))
+                os.system("convert -stroke black -draw \"rectangle 45, 45, 75, 75\" /tmp/img.jpg {0}pattern{1}.jpg".format(pattern_path, k))
                 k += 1
 
             if RANDOM_BLACK:
