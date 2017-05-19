@@ -5,7 +5,7 @@ class Autoencoder:
     """ Autoencoder class
     """
     
-    def __init__(self, image_dims=[64, 64, 3], bottleneck_dim=40):
+    def __init__(self, image_dims=[120, 120, 3], bottleneck_dim=40):
         """ Sets hyper-parameters
 
         Input:
@@ -20,6 +20,7 @@ class Autoencoder:
         """ Builds model graph
         """
         self.images = tf.placeholder(tf.float32, [None] + self.image_dims, name="raw_data")
+        self.images = self.images / 255
 
         self.encoder = self.encoder(self.images)
         self.decoder = self.decoder(self.encoder)
@@ -30,7 +31,8 @@ class Autoencoder:
     def train(self):
         """ Builds training graph
         """
-        err = tf.reduce_mean(tf.abs(self.decoder - self.images))
+        ref = tf.placeholder(tf.float32, [None] + self.image_dims, name="targets") / 255
+        err = tf.reduce_mean(tf.abs(self.decoder - ref), name="err")
         train_step = tf.train.AdamOptimizer().minimize(err, name="train_step")
 
         # Add summary scalar for tensor board
@@ -61,9 +63,10 @@ class Autoencoder:
         W = tf.Variable(tf.truncated_normal([self.bottleneck_dim, k], stddev=0.1))
         b = tf.Variable(tf.truncated_normal([k], stddev=0.1))
         y = tf.nn.xw_plus_b(bottleneck, W, b, name="y")
+        z = tf.nn.sigmoid(y)
         
         # reshape to image
-        return tf.reshape(y, [tf.shape(bottleneck)[0]] + self.image_dims, name="raw_out")
+        return tf.reshape(z, [tf.shape(bottleneck)[0]] + self.image_dims, name="raw_out")
 
     def save(self, sess, iters):
         """ Saves tensorflow graph

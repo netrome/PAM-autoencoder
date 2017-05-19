@@ -34,7 +34,7 @@ class FullSkip:
         """
         ref = tf.placeholder(tf.float32, [None] + self.image_dims, name="targets") / 255
         err = tf.reduce_mean(tf.abs(self.decoder - ref), name="err")
-        train_step = tf.train.AdamOptimizer(0.001).minimize(err, name="train_step")
+        train_step = tf.train.AdamOptimizer().minimize(err, name="train_step")
 
         # Add summary scalar for tensor board
         tf.summary.scalar("reduced_abs_err", err)
