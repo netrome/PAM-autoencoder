@@ -3,7 +3,7 @@
 Patrik Barkman, Axel Demborg and Mårten Nilsson
 
 ## Instalation
-* The scripts require among others ImageMagic, Python 3 and Tenorflow
+* The scripts require among others ImageMagic, Python 3 and Tensorflow
 
 * Clone this repository
 
@@ -11,9 +11,9 @@ Patrik Barkman, Axel Demborg and Mårten Nilsson
 
 ## Data preparation
 
-* Run `proces_lfw_data.py` to down-sample and generate distorted samples
+* Run `python proces_lfw_data.py` to down-sample and generate distorted samples
 
-* Run `data_to_npz.py` to generate numpy matrices of the data.
+* Run `python data_to_npz.py` to generate numpy matrices of the data.
 
 ## Running
 
