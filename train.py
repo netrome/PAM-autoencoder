@@ -13,16 +13,22 @@ import os
 np_data = np.load(sys.argv[1])
 
 # Split train and validation
-n = int(np.floor(np_data["targets"].shape[0] * 9/10))
-tr_patterns = np_data["patterns"][:n]
-tr_targets = np_data["targets"][:n]
-val_patterns = np_data["patterns"][n:]
-val_targets = np_data["targets"][n:]
+#n = int(np.floor(np_data["targets"].shape[0] * 9/10))
+#tr_patterns = np_data["patterns"][:n]
+#tr_targets = np_data["targets"][:n]
+#val_patterns = np_data["patterns"][n:]
+#val_targets = np_data["targets"][n:]
+n = 1000
+tr_patterns = np_data["patterns"][:1000]
+tr_targets = np_data["targets"][:1000]
+val_patterns = np_data["patterns"][1000:1100]
+val_targets = np_data["targets"][1000:1100]
 
 print(np_data)
 
 # create autoencoder
-ae = FullSkip()
+#ae = FullSkip()
+ae = Autoencoder()
 ae.build_model()
 ae.train()
 
@@ -37,8 +43,8 @@ if "board" in sys.argv:
     os.system("tensorboard --logdir /tmp/tf/ --port 6006 &")
 
 merged = tf.summary.merge_all()
-train_writer = tf.summary.FileWriter("/tmp/tf/train/", sess.graph)
-val_writer = tf.summary.FileWriter("/tmp/tf/val/", sess.graph) 
+#train_writer = tf.summary.FileWriter("/tmp/tf/train/", sess.graph)
+#val_writer = tf.summary.FileWriter("/tmp/tf/val/", sess.graph) 
 
 sess.run(init)
 print()
@@ -49,7 +55,7 @@ train_err = []
 val_err = []
 
 batch_size = np.min([200, n])
-iters = 20
+iters = 400
 if len(sys.argv) > 2:
     iters = int(sys.argv[2])
 
@@ -68,16 +74,16 @@ for i in range(iters):
 
     if i%10 == 0 and "log" in sys.argv:
         m, tr_err = sess.run([merged, "err:0"], feed_dict={"raw_data:0": tr_patterns, "targets:0": tr_targets})
-        train_writer.add_summary(m, i)
+        #train_writer.add_summary(m, i)
         m, va_err = sess.run([merged, "err:0"], feed_dict={"raw_data:0": val_patterns, "targets:0": val_targets})
-        val_writer.add_summary(m, i)
-        ae.saver.save(sess, "/tmp/tf/model.cpkt", global_step=i)
+        #val_writer.add_summary(m, i)
+        #ae.saver.save(sess, "/tmp/tf/model.cpkt", global_step=i)
 
         # Save in numpy format
         train_err.append(tr_err)
         val_err.append(va_err)
-        np.save("logs/train_err", train_err)
-        np.save("logs/val_err", val_err)
+        np.save("logs/train_err_" + ae.name, train_err)
+        np.save("logs/val_err_" + ae.name, val_err)
     print(i)
 
 # Save trained model
