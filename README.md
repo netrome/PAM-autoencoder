@@ -19,6 +19,8 @@ Patrik Barkman, Axel Demborg and Mårten Nilsson
 
 ## Running
 
+* [OPTIONAL] Choose model to train by editing `train.py` and comment out all assignements to `ae`exept for the one corresponding to the choosen model
+
 * Run `python train.py data/numpy_data.npz 500 100 log board` to train on the recently generated data for 500 epocs, batch size 100 and writing logs to tensorboard.
 
 * Run `python eval.py data/numpy_data.npz 500` to evaluate on the training data, 
