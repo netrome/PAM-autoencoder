@@ -19,6 +19,6 @@ Patrik Barkman, Axel Demborg and Mårten Nilsson
 
 ## Running
 
-* Run `python train.py data/numpy_data.npz 1000 100 log board` to train on the recently generated data for 1000 epocs, batch size 100 and writing logs to tensorboard.
+* Run `python train.py data/numpy_data.npz 500 100 log board` to train on the recently generated data for 1000 epocs, batch size 100 and writing logs to tensorboard.
 
-* Run `python eval.py data/numpy_data.npz 1000` to evaluate on the training data, 
+* Run `python eval.py data/numpy_data.npz 500` to evaluate on the training data, 
