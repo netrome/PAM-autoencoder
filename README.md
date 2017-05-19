@@ -9,6 +9,8 @@ Patrik Barkman, Axel Demborg and Mårten Nilsson
 
 * Run the make file in `data` to download the data set
 
+* Create folders named `saved_models` and `logs`in the root of the respository
+
 ## Data preparation
 
 * Run `python proces_lfw_data.py` to down-sample and generate distorted samples
